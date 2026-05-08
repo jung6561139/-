@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>유진쌤 숙제 확인 폼</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+:root {
+–bg: #f2efe9;
+–surface: #ffffff;
+–surface2: #faf8f5;
+–border: #e2dbd0;
+–border2: #cec5b8;
+–ink: #1c1810;
+–ink2: #5a5248;
+–ink3: #9a9088;
+–accent: #c0392b;
+–accent2: #e8d5d3;
+–blue: #1a4f8a;
+–blue2: #d6e4f0;
+–green: #1e8449;
+–green2: #d4efdf;
+–yellow: #d4a017;
+–yellow2: #fef9e7;
+–shadow: 0 2px 12px rgba(28,24,16,0.08);
+–shadow-lg: 0 8px 32px rgba(28,24,16,0.12);
+}
+
+- { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+font-family: ‘Noto Sans KR’, sans-serif;
+background: var(–bg);
+min-height: 100vh;
+color: var(–ink);
+}
+
+/* ── TOP NAV ── */
+.top-bar {
+background: var(–ink);
+padding: 0 20px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+height: 52px;
+position: sticky;
+top: 0;
+z-index: 100;
+}
+.top-title {
+font-size: 15px;
+font-weight: 700;
+color: #fff;
+letter-spacing: -0.3px;
+}
+.top-sub {
+font-size: 11px;
+color: rgba(255,255,255,0.45);
+letter-spacing: 0.5px;
+}
+
+/* ── HOME: class cards ── */
+#home-view {
+padding: 24px 16px 40px;
+max-width: 560px;
+margin: 0 auto;
+}
+.home-greeting {
+padding: 20px 0 24px;
+}
+.home-greeting h2 {
+font-size: 22px;
+font-weight: 900;
+letter-spacing: -0.5px;
+color: var(–ink);
+}
+.home-greeting p {
+font-size: 13px;
+color: var(–ink3);
+margin-top: 4px;
+}
+
+.class-grid {
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+
+.class-card {
+background: var(–surface);
+border: 1.5px solid var(–border);
+border-radius: 12px;
+padding: 18px 20px;
+cursor: pointer;
+transition: all 0.18s ease;
+display: flex;
+align-items: center;
+justify-content: space-between;
+box-shadow: var(–shadow);
+position: relative;
+overflow: hidden;
+}
+.class-card::before {
+content: ‘’;
+position: absolute;
+left: 0; top: 0; bottom: 0;
+width: 5px;
+border-radius: 12px 0 0 12px;
+background: var(–border2);
+transition: background 0.18s;
+}
+.class-card:hover { border-color: var(–border2); transform: translateY(-1px); box-shadow: var(–shadow-lg); }
+.class-card:hover::before { background: var(–accent); }
+
+.class-card-left {}
+.class-name-display {
+font-size: 17px;
+font-weight: 700;
+color: var(–ink);
+letter-spacing: -0.3px;
+}
+.class-meta {
+font-size: 12px;
+color: var(–ink3);
+margin-top: 4px;
+}
+.class-stats {
+display: flex;
+gap: 8px;
+align-items: center;
+}
+.stat-pill {
+font-size: 11px;
+padding: 3px 10px;
+border-radius: 100px;
+font-weight: 600;
+}
+.stat-students { background: var(–blue2); color: var(–blue); }
+.stat-done { background: var(–green2); color: var(–green); }
+.stat-arrow { font-size: 18px; color: var(–ink3); }
+
+/* ── CLASS DETAIL VIEW ── */
+#class-view { display: none; }
+
+.class-header {
+background: var(–ink);
+padding: 16px 20px 20px;
+position: sticky;
+top: 52px;
+z-index: 90;
+}
+.back-btn {
+background: none;
+border: none;
+color: rgba(255,255,255,0.6);
+font-size: 13px;
+font-family: ‘Noto Sans KR’, sans-serif;
+cursor: pointer;
+padding: 0;
+margin-bottom: 8px;
+display: flex;
+align-items: center;
+gap: 4px;
+}
+.back-btn:hover { color: #fff; }
+.class-header-name {
+font-size: 20px;
+font-weight: 900;
+color: #fff;
+letter-spacing: -0.3px;
+}
+
+/* Week tabs */
+.week-tabs-wrap {
+background: var(–surface2);
+border-bottom: 1px solid var(–border);
+padding: 0 16px;
+display: flex;
+gap: 0;
+overflow-x: auto;
+scrollbar-width: none;
+position: sticky;
+top: 120px;
+z-index: 80;
+}
+.week-tabs-wrap::-webkit-scrollbar { display: none; }
+.week-tab {
+padding: 12px 16px;
+font-size: 13px;
+font-weight: 500;
+color: var(–ink3);
+cursor: pointer;
+border-bottom: 2.5px solid transparent;
+white-space: nowrap;
+transition: all 0.15s;
+font-family: ‘Noto Sans KR’, sans-serif;
+background: none;
+border-top: none;
+border-left: none;
+border-right: none;
+}
+.week-tab.active { color: var(–accent); border-bottom-color: var(–accent); font-weight: 700; }
+.week-tab:hover:not(.active) { color: var(–ink2); }
+.add-week-btn {
+padding: 10px 14px;
+font-size: 18px;
+color: var(–ink3);
+cursor: pointer;
+background: none;
+border: none;
+font-family: inherit;
+transition: color 0.15s;
+}
+.add-week-btn:hover { color: var(–accent); }
+
+.class-content {
+padding: 20px 16px 60px;
+max-width: 700px;
+margin: 0 auto;
+}
+
+/* ── WEEK PANEL ── */
+.week-panel { display: none; }
+.week-panel.active { display: block; }
+
+/* Info section */
+.info-section {
+background: var(–surface);
+border: 1.5px solid var(–border);
+border-radius: 10px;
+padding: 16px;
+margin-bottom: 16px;
+box-shadow: var(–shadow);
+}
+.section-label {
+font-size: 10px;
+font-weight: 700;
+letter-spacing: 1.5px;
+color: var(–ink3);
+text-transform: uppercase;
+margin-bottom: 8px;
+}
+.info-input {
+width: 100%;
+border: 1.5px solid var(–border);
+border-radius: 7px;
+padding: 10px 12px;
+font-size: 14px;
+font-family: ‘Noto Sans KR’, sans-serif;
+color: var(–ink);
+background: var(–surface2);
+transition: border-color 0.15s;
+resize: vertical;
+}
+.info-input:focus { outline: none; border-color: var(–blue); background: #fff; }
+.info-row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+}
+
+/* ── STUDENT TABLE ── */
+.students-section {
+background: var(–surface);
+border: 1.5px solid var(–border);
+border-radius: 10px;
+overflow: hidden;
+box-shadow: var(–shadow);
+margin-bottom: 16px;
+}
+.students-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 14px 16px;
+border-bottom: 1px solid var(–border);
+background: var(–surface2);
+}
+.students-title {
+font-size: 13px;
+font-weight: 700;
+color: var(–ink);
+}
+.add-student-btn {
+background: var(–ink);
+color: #fff;
+border: none;
+border-radius: 6px;
+padding: 6px 12px;
+font-size: 12px;
+font-weight: 600;
+cursor: pointer;
+font-family: inherit;
+transition: background 0.15s;
+}
+.add-student-btn:hover { background: var(–accent); }
+
+.student-row {
+border-bottom: 1px solid var(–border);
+padding: 12px 16px;
+display: grid;
+grid-template-columns: 110px 1fr auto;
+gap: 12px;
+align-items: start;
+transition: background 0.12s;
+}
+.student-row:last-child { border-bottom: none; }
+.student-row:hover { background: var(–surface2); }
+
+.student-name-input {
+font-size: 14px;
+font-weight: 700;
+font-family: ‘Noto Sans KR’, sans-serif;
+color: var(–ink);
+border: none;
+background: transparent;
+width: 100%;
+padding: 4px 0;
+border-bottom: 1.5px solid transparent;
+transition: border-color 0.15s;
+}
+.student-name-input:focus { outline: none; border-bottom-color: var(–border2); }
+
+.student-fields { display: flex; flex-direction: column; gap: 8px; }
+
+/* Textbook check */
+.textbook-check-row {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.field-label-sm {
+font-size: 11px;
+color: var(–ink3);
+font-weight: 500;
+white-space: nowrap;
+min-width: 80px;
+}
+.check-group {
+display: flex;
+gap: 6px;
+}
+.check-btn {
+padding: 4px 10px;
+font-size: 11px;
+font-weight: 600;
+border-radius: 100px;
+cursor: pointer;
+border: 1.5px solid var(–border);
+background: transparent;
+color: var(–ink3);
+font-family: inherit;
+transition: all 0.15s;
+}
+.check-btn:hover { border-color: var(–border2); color: var(–ink); }
+.check-btn.done { background: var(–green2); border-color: var(–green); color: var(–green); }
+.check-btn.undone { background: var(–accent2); border-color: var(–accent); color: var(–accent); }
+.check-btn.partial { background: var(–yellow2); border-color: var(–yellow); color: var(–yellow); }
+
+/* Concepts textarea */
+.concept-row {
+display: flex;
+align-items: flex-start;
+gap: 8px;
+}
+.concept-input {
+flex: 1;
+border: 1.5px solid var(–border);
+border-radius: 6px;
+padding: 6px 10px;
+font-size: 12px;
+font-family: ‘Noto Sans KR’, sans-serif;
+color: var(–accent);
+background: #fff9f8;
+resize: none;
+min-height: 36px;
+transition: border-color 0.15s;
+overflow: hidden;
+}
+.concept-input::placeholder { color: #d4a0a0; }
+.concept-input:focus { outline: none; border-color: var(–accent); background: #fff; }
+
+/* Test result */
+.test-row {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.score-input {
+width: 70px;
+border: 1.5px solid var(–border);
+border-radius: 6px;
+padding: 5px 8px;
+font-size: 13px;
+font-family: ‘Noto Sans KR’, sans-serif;
+font-weight: 700;
+color: var(–ink);
+background: var(–surface2);
+text-align: center;
+transition: border-color 0.15s;
+}
+.score-input:focus { outline: none; border-color: var(–blue); background: #fff; }
+
+.score-badge {
+font-size: 11px;
+padding: 3px 8px;
+border-radius: 100px;
+font-weight: 600;
+}
+
+.delete-student-btn {
+background: none;
+border: none;
+color: var(–border2);
+font-size: 16px;
+cursor: pointer;
+padding: 4px;
+line-height: 1;
+transition: color 0.15s;
+align-self: flex-start;
+margin-top: 2px;
+}
+.delete-student-btn:hover { color: var(–accent); }
+
+/* Progress bar */
+.progress-bar-wrap {
+padding: 10px 16px;
+background: var(–surface2);
+border-top: 1px solid var(–border);
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.progress-bar {
+flex: 1;
+height: 6px;
+background: var(–border);
+border-radius: 100px;
+overflow: hidden;
+}
+.progress-fill {
+height: 100%;
+background: var(–green);
+border-radius: 100px;
+transition: width 0.3s ease;
+}
+.progress-text { font-size: 11px; color: var(–ink3); font-weight: 600; white-space: nowrap; }
+
+/* Save bar */
+.save-bar {
+position: fixed;
+bottom: 0; left: 0; right: 0;
+background: var(–ink);
+padding: 12px 20px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+z-index: 200;
+transform: translateY(100%);
+transition: transform 0.25s ease;
+}
+.save-bar.visible { transform: translateY(0); }
+.save-status { font-size: 12px; color: rgba(255,255,255,0.6); }
+.save-btn {
+background: var(–accent);
+color: #fff;
+border: none;
+border-radius: 8px;
+padding: 9px 20px;
+font-size: 13px;
+font-weight: 700;
+font-family: inherit;
+cursor: pointer;
+transition: opacity 0.15s;
+}
+.save-btn:hover { opacity: 0.88; }
+.saved-toast {
+position: fixed;
+bottom: 80px;
+left: 50%;
+transform: translateX(-50%) translateY(20px);
+background: var(–green);
+color: #fff;
+padding: 8px 20px;
+border-radius: 100px;
+font-size: 13px;
+font-weight: 600;
+opacity: 0;
+transition: all 0.3s ease;
+pointer-events: none;
+z-index: 300;
+}
+.saved-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Edit class name modal */
+.modal-bg {
+position: fixed; inset: 0;
+background: rgba(0,0,0,0.45);
+z-index: 500;
+display: none;
+align-items: center;
+justify-content: center;
+padding: 20px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+background: #fff;
+border-radius: 14px;
+padding: 24px;
+width: 100%;
+max-width: 360px;
+box-shadow: var(–shadow-lg);
+}
+.modal h3 { font-size: 16px; font-weight: 800; margin-bottom: 14px; }
+.modal input {
+width: 100%;
+border: 1.5px solid var(–border);
+border-radius: 8px;
+padding: 11px 14px;
+font-size: 15px;
+font-family: inherit;
+margin-bottom: 14px;
+}
+.modal input:focus { outline: none; border-color: var(–blue); }
+.modal-btns { display: flex; gap: 10px; }
+.modal-cancel { flex: 1; padding: 10px; border: 1.5px solid var(–border); border-radius: 8px; background: none; font-family: inherit; font-size: 14px; cursor: pointer; }
+.modal-confirm { flex: 1; padding: 10px; border: none; border-radius: 8px; background: var(–ink); color: #fff; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+
+/* students count badge in class name header */
+.class-header-meta { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+
+/* Edit class name btn */
+.edit-name-btn {
+background: none; border: none;
+color: rgba(255,255,255,0.5);
+font-size: 13px; cursor: pointer;
+padding: 0; margin-left: 8px;
+vertical-align: middle;
+}
+.edit-name-btn:hover { color: #fff; }
+</style>
+
+</head>
+<body>
+
+<!-- TOP BAR -->
+
+<div class="top-bar">
+  <div>
+    <div class="top-title">유스트학원 · 국어</div>
+  </div>
+  <div class="top-sub">유진쌤 숙제 확인</div>
+</div>
+
+<!-- HOME VIEW -->
+
+<div id="home-view">
+  <div class="home-greeting">
+    <h2>반 선택</h2>
+    <p>확인할 반을 눌러서 들어가세요</p>
+  </div>
+  <div class="class-grid" id="class-grid"></div>
+</div>
+
+<!-- CLASS DETAIL VIEW -->
+
+<div id="class-view">
+  <div class="class-header">
+    <button class="back-btn" onclick="goHome()">← 반 목록</button>
+    <div style="display:flex; align-items:center;">
+      <div class="class-header-name" id="class-header-name">반 이름</div>
+      <button class="edit-name-btn" onclick="openEditName()" title="반 이름 수정">✎</button>
+    </div>
+    <div class="class-header-meta" id="class-header-meta"></div>
+  </div>
+
+  <div class="week-tabs-wrap" id="week-tabs">
+    <button class="add-week-btn" onclick="addWeek()" title="주차 추가">＋</button>
+  </div>
+
+  <div class="class-content" id="class-content"></div>
+</div>
+
+<!-- SAVE BAR -->
+
+<div class="save-bar" id="save-bar">
+  <div class="save-status" id="save-status">변경사항이 있습니다</div>
+  <button class="save-btn" onclick="saveAll()">💾 저장</button>
+</div>
+<div class="saved-toast" id="saved-toast">저장되었습니다 ✓</div>
+
+<!-- EDIT NAME MODAL -->
+
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h3>반 이름 수정</h3>
+    <input type="text" id="modal-input" placeholder="반 이름을 입력하세요">
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">취소</button>
+      <button class="modal-confirm" onclick="confirmEditName()">확인</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+const STORAGE_KEY = 'yujin_homework_v2';
+
+const defaultClasses = [
+  { id: 'c1', name: '예원중 1학년', weeks: [] },
+  { id: 'c2', name: '예원중 2학년', weeks: [] },
+  { id: 'c3', name: '예원중 3학년', weeks: [] },
+  { id: 'c4', name: '선화중 2학년', weeks: [] },
+  { id: 'c5', name: '선화중 3학년', weeks: [] },
+];
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return { classes: defaultClasses };
+}
+
+function saveState() {
+  try {
+    collectCurrentInputs();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    showToast();
+    hideSaveBar();
+  } catch(e) {
+    alert('저장 실패: ' + e.message);
+  }
+}
+
+let state = loadState();
+let currentClassId = null;
+let currentWeekIdx = 0;
+let dirty = false;
+
+// ── HOME ──
+function renderHome() {
+  const grid = document.getElementById('class-grid');
+  grid.innerHTML = '';
+  state.classes.forEach(cls => {
+    const totalStudents = cls.weeks.length > 0
+      ? Math.max(...cls.weeks.map(w => w.students.length), 0)
+      : 0;
+    const lastWeek = cls.weeks[cls.weeks.length - 1];
+    const doneCount = lastWeek
+      ? lastWeek.students.filter(s => s.textbookCheck === 'done').length
+      : 0;
+
+    const card = document.createElement('div');
+    card.className = 'class-card';
+    card.innerHTML = `
+      <div class="class-card-left">
+        <div class="class-name-display">${cls.name}</div>
+        <div class="class-meta">${cls.weeks.length > 0 ? cls.weeks.length + '주차 기록' : '아직 기록 없음'}</div>
+      </div>
+      <div class="class-stats">
+        ${totalStudents > 0 ? `<span class="stat-pill stat-students">학생 ${totalStudents}명</span>` : ''}
+        ${doneCount > 0 ? `<span class="stat-pill stat-done">완료 ${doneCount}</span>` : ''}
+        <span class="stat-arrow">›</span>
+      </div>
+    `;
+    card.onclick = () => openClass(cls.id);
+    grid.appendChild(card);
+  });
+}
+
+// ── CLASS VIEW ──
+function openClass(classId) {
+  currentClassId = classId;
+  const cls = getClass();
+  if (!cls) return;
+
+  document.getElementById('home-view').style.display = 'none';
+  document.getElementById('class-view').style.display = 'block';
+  document.getElementById('class-header-name').textContent = cls.name;
+
+  // Init with at least 1 week
+  if (cls.weeks.length === 0) addWeekData(cls);
+
+  currentWeekIdx = cls.weeks.length - 1;
+  renderWeekTabs();
+  renderWeekPanel();
+}
+
+function goHome() {
+  collectCurrentInputs();
+  if (dirty) saveState();
+  document.getElementById('home-view').style.display = 'block';
+  document.getElementById('class-view').style.display = 'none';
+  renderHome();
+}
+
+function getClass() {
+  return state.classes.find(c => c.id === currentClassId);
+}
+
+function addWeekData(cls) {
+  // Copy students from last week if exists
+  const prevStudents = cls.weeks.length > 0
+    ? cls.weeks[cls.weeks.length - 1].students.map(s => ({
+        id: s.id, name: s.name,
+        textbookCheck: 'none', concepts: '', testScore: ''
+      }))
+    : [];
+  cls.weeks.push({
+    label: `${cls.weeks.length + 1}주차`,
+    progress: '',
+    homework: '',
+    students: prevStudents
+  });
+}
+
+function addWeek() {
+  const cls = getClass();
+  collectCurrentInputs();
+  addWeekData(cls);
+  currentWeekIdx = cls.weeks.length - 1;
+  markDirty();
+  renderWeekTabs();
+  renderWeekPanel();
+}
+
+function renderWeekTabs() {
+  const cls = getClass();
+  const container = document.getElementById('week-tabs');
+  container.innerHTML = '';
+
+  cls.weeks.forEach((w, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'week-tab' + (i === currentWeekIdx ? ' active' : '');
+    btn.textContent = w.label;
+    btn.onclick = () => {
+      collectCurrentInputs();
+      currentWeekIdx = i;
+      renderWeekTabs();
+      renderWeekPanel();
+    };
+
+    // Double-click to rename
+    btn.ondblclick = () => {
+      const newName = prompt('주차 이름 변경:', w.label);
+      if (newName && newName.trim()) {
+        cls.weeks[i].label = newName.trim();
+        markDirty();
+        renderWeekTabs();
+      }
+    };
+    container.appendChild(btn);
+  });
+
+  const addBtn = document.createElement('button');
+  addBtn.className = 'add-week-btn';
+  addBtn.textContent = '＋';
+  addBtn.title = '주차 추가';
+  addBtn.onclick = addWeek;
+  container.appendChild(addBtn);
+
+  // Update header meta
+  const totalStudents = cls.weeks[currentWeekIdx]?.students.length || 0;
+  document.getElementById('class-header-meta').textContent = `${cls.weeks.length}주차 기록 · 학생 ${totalStudents}명`;
+}
+
+function renderWeekPanel() {
+  const cls = getClass();
+  const week = cls.weeks[currentWeekIdx];
+  const container = document.getElementById('class-content');
+  container.innerHTML = '';
+
+  // Info section
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'info-section';
+  infoDiv.innerHTML = `
+    <div class="section-label">이번 주 수업 정보</div>
+    <div class="info-row">
+      <div>
+        <div style="font-size:11px;color:var(--ink3);margin-bottom:5px;font-weight:600;">진도</div>
+        <input class="info-input" id="inp-progress" placeholder="예) 3단원 2~3번 지문" value="${esc(week.progress)}" oninput="markDirty()">
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--ink3);margin-bottom:5px;font-weight:600;">숙제</div>
+        <input class="info-input" id="inp-homework" placeholder="예) p.34~36 문제 풀기" value="${esc(week.homework)}" oninput="markDirty()">
+      </div>
+    </div>
+  `;
+  container.appendChild(infoDiv);
+
+  // Students section
+  const studentsDiv = document.createElement('div');
+  studentsDiv.className = 'students-section';
+  studentsDiv.innerHTML = `
+    <div class="students-header">
+      <div class="students-title">학생별 확인</div>
+      <button class="add-student-btn" onclick="addStudent()">+ 학생 추가</button>
+    </div>
+    <div id="students-list"></div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-text" id="progress-text">교과서 필기 0 / 0</div>
+    </div>
+  `;
+  container.appendChild(studentsDiv);
+
+  week.students.forEach((s, i) => renderStudentRow(s, i));
+  updateProgress();
+}
+
+function renderStudentRow(student, idx) {
+  const list = document.getElementById('students-list');
+  const row = document.createElement('div');
+  row.className = 'student-row';
+  row.id = `student-row-${student.id}`;
+
+  const checkState = student.textbookCheck || 'none';
+
+  row.innerHTML = `
+    <div>
+      <input class="student-name-input" 
+        placeholder="이름" 
+        value="${esc(student.name)}"
+        data-sid="${student.id}"
+        oninput="markDirty()">
+    </div>
+    <div class="student-fields">
+      <!-- 교과서 필기 확인 -->
+      <div class="textbook-check-row">
+        <span class="field-label-sm">교과서 필기 확인</span>
+        <div class="check-group">
+          <button class="check-btn ${checkState==='done'?'done':''}" 
+            data-sid="${student.id}" data-val="done"
+            onclick="setCheck('${student.id}','done',this)">✓ 완료</button>
+          <button class="check-btn ${checkState==='partial'?'partial':''}" 
+            data-sid="${student.id}" data-val="partial"
+            onclick="setCheck('${student.id}','partial',this)">△ 일부</button>
+          <button class="check-btn ${checkState==='undone'?'undone':''}" 
+            data-sid="${student.id}" data-val="undone"
+            onclick="setCheck('${student.id}','undone',this)">✕ 미완</button>
+        </div>
+      </div>
+
+      <!-- 빨간 개념 -->
+      <div class="concept-row">
+        <span class="field-label-sm" style="padding-top:4px;">🔴 약점 개념</span>
+        <textarea class="concept-input" 
+          data-sid="${student.id}" 
+          placeholder="틀린 개념 메모 (빨간펜 표시 항목)"
+          oninput="markDirty(); autoResize(this)">${esc(student.concepts)}</textarea>
+
+```
+  </div>
+
+  <!-- 복습 테스트 -->
+  <div class="test-row">
+    <span class="field-label-sm">복습 테스트</span>
+    <input class="score-input" 
+      type="text"
+      data-sid="${student.id}"
+      placeholder="점수"
+      value="${esc(student.testScore)}"
+      oninput="markDirty()">
+    <span style="font-size:12px;color:var(--ink3);">점</span>
+    ${getScoreBadge(student.testScore)}
+  </div>
+</div>
+<button class="delete-student-btn" onclick="deleteStudent('${student.id}')" title="삭제">×</button>
+```
+
+`;
+list.appendChild(row);
+
+// Auto-resize textarea
+setTimeout(() => {
+const ta = row.querySelector(‘textarea’);
+if (ta) autoResize(ta);
+}, 0);
+}
+
+function getScoreBadge(score) {
+const n = parseInt(score);
+if (isNaN(n) || score === ‘’) return ‘’;
+if (n >= 90) return `<span class="score-badge" style="background:var(--green2);color:var(--green)">우수</span>`;
+if (n >= 70) return `<span class="score-badge" style="background:var(--yellow2);color:var(--yellow)">보통</span>`;
+return `<span class="score-badge" style="background:var(--accent2);color:var(--accent)">주의</span>`;
+}
+
+function setCheck(sid, val, btn) {
+const cls = getClass();
+const week = cls.weeks[currentWeekIdx];
+const student = week.students.find(s => s.id === sid);
+if (!student) return;
+
+// Toggle off if already selected
+if (student.textbookCheck === val) {
+student.textbookCheck = ‘none’;
+} else {
+student.textbookCheck = val;
+}
+
+// Update button styles in row
+const row = document.getElementById(`student-row-${sid}`);
+row.querySelectorAll(’.check-btn’).forEach(b => {
+b.classList.remove(‘done’,‘partial’,‘undone’);
+if (student.textbookCheck !== ‘none’ && b.dataset.val === student.textbookCheck) {
+b.classList.add(student.textbookCheck);
+}
+});
+
+markDirty();
+updateProgress();
+}
+
+function updateProgress() {
+const cls = getClass();
+const week = cls.weeks[currentWeekIdx];
+if (!week) return;
+const total = week.students.length;
+const done = week.students.filter(s => s.textbookCheck === ‘done’).length;
+const pct = total > 0 ? Math.round(done / total * 100) : 0;
+const fill = document.getElementById(‘progress-fill’);
+const text = document.getElementById(‘progress-text’);
+if (fill) fill.style.width = pct + ‘%’;
+if (text) text.textContent = `교과서 필기 완료 ${done} / ${total}명`;
+}
+
+function addStudent() {
+const cls = getClass();
+const week = cls.weeks[currentWeekIdx];
+const newStudent = {
+id: ‘s’ + Date.now(),
+name: ‘’,
+textbookCheck: ‘none’,
+concepts: ‘’,
+testScore: ‘’
+};
+week.students.push(newStudent);
+
+// Sync to other weeks (add blank entry)
+cls.weeks.forEach((w, i) => {
+if (i !== currentWeekIdx) {
+w.students.push({ id: newStudent.id, name: ‘’, textbookCheck: ‘none’, concepts: ‘’, testScore: ‘’ });
+}
+});
+
+renderStudentRow(newStudent, week.students.length - 1);
+updateProgress();
+markDirty();
+
+// Focus name input
+setTimeout(() => {
+const input = document.querySelector(`#student-row-${newStudent.id} .student-name-input`);
+if (input) input.focus();
+}, 50);
+}
+
+function deleteStudent(sid) {
+if (!confirm(‘이 학생을 삭제할까요?’)) return;
+const cls = getClass();
+cls.weeks.forEach(w => {
+w.students = w.students.filter(s => s.id !== sid);
+});
+const row = document.getElementById(`student-row-${sid}`);
+if (row) row.remove();
+updateProgress();
+markDirty();
+}
+
+// ── COLLECT INPUTS → STATE ──
+function collectCurrentInputs() {
+if (!currentClassId) return;
+const cls = getClass();
+const week = cls.weeks[currentWeekIdx];
+if (!week) return;
+
+const prog = document.getElementById(‘inp-progress’);
+const hw = document.getElementById(‘inp-homework’);
+if (prog) week.progress = prog.value;
+if (hw) week.homework = hw.value;
+
+// Student names & scores & concepts
+week.students.forEach(s => {
+const row = document.getElementById(`student-row-${s.id}`);
+if (!row) return;
+const nameInput = row.querySelector(’.student-name-input’);
+if (nameInput) s.name = nameInput.value;
+const scoreInput = row.querySelector(’.score-input’);
+if (scoreInput) s.testScore = scoreInput.value;
+const ta = row.querySelector(‘textarea’);
+if (ta) s.concepts = ta.value;
+});
+
+// Sync names across weeks
+cls.weeks.forEach((w, wi) => {
+if (wi === currentWeekIdx) return;
+w.students.forEach(s => {
+const master = week.students.find(ms => ms.id === s.id);
+if (master && master.name) s.name = master.name;
+});
+});
+}
+
+// ── EDIT CLASS NAME ──
+function openEditName() {
+const cls = getClass();
+document.getElementById(‘modal-input’).value = cls.name;
+document.getElementById(‘modal-bg’).classList.add(‘open’);
+setTimeout(() => document.getElementById(‘modal-input’).focus(), 100);
+}
+function closeModal() {
+document.getElementById(‘modal-bg’).classList.remove(‘open’);
+}
+function confirmEditName() {
+const val = document.getElementById(‘modal-input’).value.trim();
+if (!val) return;
+const cls = getClass();
+cls.name = val;
+document.getElementById(‘class-header-name’).textContent = val;
+closeModal();
+markDirty();
+}
+document.getElementById(‘modal-input’).addEventListener(‘keydown’, e => {
+if (e.key === ‘Enter’) confirmEditName();
+if (e.key === ‘Escape’) closeModal();
+});
+
+// ── DIRTY / SAVE ──
+function markDirty() {
+dirty = true;
+document.getElementById(‘save-bar’).classList.add(‘visible’);
+}
+function hideSaveBar() {
+dirty = false;
+document.getElementById(‘save-bar’).classList.remove(‘visible’);
+}
+function saveAll() {
+saveState();
+}
+function showToast() {
+const t = document.getElementById(‘saved-toast’);
+t.classList.add(‘show’);
+setTimeout(() => t.classList.remove(‘show’), 2200);
+}
+
+// ── HELPERS ──
+function esc(str) {
+if (!str) return ‘’;
+return str.replace(/&/g,’&’).replace(/”/g,’"’).replace(/</g,’<’).replace(/>/g,’>’);
+}
+function autoResize(el) {
+el.style.height = ‘auto’;
+el.style.height = Math.max(36, el.scrollHeight) + ‘px’;
+}
+
+// Auto-save on name input sync
+document.addEventListener(‘input’, e => {
+if (e.target.classList.contains(‘student-name-input’)) {
+// Live sync name across weeks
+const sid = e.target.dataset.sid;
+if (sid && currentClassId) {
+const cls = getClass();
+cls.weeks.forEach(w => {
+const s = w.students.find(st => st.id === sid);
+if (s) s.name = e.target.value;
+});
+}
+}
+if (e.target.classList.contains(‘score-input’)) {
+// Update score badge live
+const sid = e.target.dataset.sid;
+const row = document.getElementById(`student-row-${sid}`);
+if (row) {
+const badgeSpan = row.querySelector(’.score-badge’);
+const newBadge = getScoreBadge(e.target.value);
+const testRow = e.target.closest(’.test-row’);
+if (testRow) {
+// Remove old badge
+const old = testRow.querySelector(’.score-badge’);
+if (old) old.remove();
+if (newBadge) testRow.insertAdjacentHTML(‘beforeend’, newBadge);
+}
+}
+}
+});
+
+// ── INIT ──
+renderHome();
+</script>
+
+</body>
+</html>
